@@ -1,0 +1,383 @@
+SET A
+a)	Write a C program that accepts the vertices and edges of a graph and stores it as an adjacency matrix. Display the adjacency matrix. 
+
+#include <stdio.h>
+int main()
+{
+    int n, e, i, j;
+    int adj[10][10] = {0};
+    int u, v;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &e);
+
+    for(i = 0; i < e; i++)
+    {
+        printf("Enter edge (u v): ");
+        scanf("%d %d", &u, &v);
+        adj[u][v] = 1;
+    }
+
+    printf("\nAdjacency Matrix:\n");
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            printf("%d ", adj[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+
+b)	Write a C program that accepts the vertices and edges of a graph. Create and display adjacency list also print indegree, outdegree and total degree of all vertex of graph.
+
+#include <stdio.h>
+#include <stdlib.h>
+struct node
+{
+    int data;
+    struct node *next;
+};
+struct node *adj[10];
+int indeg[10], outdeg[10];
+
+struct node* createNode(int v)
+{
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = v;
+    newnode->next = NULL;
+    return newnode;
+}
+int main()
+{
+    int n, e, i, u, v;
+    struct node *temp;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &e);
+
+    for(i = 0; i < n; i++)
+    {
+        adj[i] = NULL;
+        indeg[i] = outdeg[i] = 0;
+    }
+
+    for(i = 0; i < e; i++)
+    {
+        printf("Enter edge (u v): ");
+        scanf("%d %d", &u, &v);
+
+        temp = createNode(v);
+        temp->next = adj[u];
+        adj[u] = temp;
+
+        outdeg[u]++;
+        indeg[v]++;
+    }
+
+    printf("\nAdjacency List:\n");
+    for(i = 0; i < n; i++)
+    {
+        printf("%d -> ", i);
+        temp = adj[i];
+        while(temp != NULL)
+        {
+            printf("%d ", temp->data);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+
+    printf("\nVertex  Indegree  Outdegree  Total Degree\n");
+    for(i = 0; i < n; i++)
+    {
+        printf("%d\t%d\t   %d\t      %d\n",
+               i, indeg[i], outdeg[i], indeg[i] + outdeg[i]);
+    }
+    return 0;
+}
+
+
+
+Set B
+ a) Write a C program that accepts the vertices and edges of a graph and store it as an adjacency matrix. Implement function to traverse the graph using Breadth First Search (BFS) and Depth First Search (DFS) traversal. 
+
+#include <stdio.h>
+
+int adj[10][10], visited[10];
+int n;
+
+void DFS(int v)
+{
+    int i;
+    printf("%d ", v);
+    visited[v] = 1;
+
+    for(i = 0; i < n; i++)
+    {
+        if(adj[v][i] == 1 && visited[i] == 0)
+            DFS(i);
+    }
+}
+
+void BFS(int start)
+{
+    int queue[10], front = 0, rear = 0;
+    int i;
+
+    queue[rear++] = start;
+    visited[start] = 1;
+
+    while(front < rear)
+    {
+        int v = queue[front++];
+        printf("%d ", v);
+
+        for(i = 0; i < n; i++)
+        {
+            if(adj[v][i] == 1 && visited[i] == 0)
+            {
+                queue[rear++] = i;
+                visited[i] = 1;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int e, i, u, v, start;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &e);
+
+    for(i = 0; i < e; i++)
+    {
+        printf("Enter edge (u v): ");
+        scanf("%d %d", &u, &v);
+        adj[u][v] = 1;
+    }
+
+    printf("Enter starting vertex: ");
+    scanf("%d", &start);
+
+    printf("\nDFS Traversal: ");
+    for(i = 0; i < n; i++) visited[i] = 0;
+    DFS(start);
+
+    printf("\nBFS Traversal: ");
+    for(i = 0; i < n; i++) visited[i] = 0;
+    BFS(start);
+
+    return 0;
+}
+
+
+
+b) Write a C program that accepts the vertices and edges of a graph and store it as an adjacency list. Implement function to traverse the graph using Breadth First Search (BFS) and Depth First Search (DFS) traversal.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *adj[10];
+int visited[10];
+int n;
+
+struct node* createNode(int v)
+{
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = v;
+    newnode->next = NULL;
+    return newnode;
+}
+
+void DFS(int v)
+{
+    struct node *temp;
+    printf("%d ", v);
+    visited[v] = 1;
+
+    temp = adj[v];
+    while(temp != NULL)
+    {
+        if(visited[temp->data] == 0)
+            DFS(temp->data);
+        temp = temp->next;
+    }
+}
+
+void BFS(int start)
+{
+    int queue[10], front = 0, rear = 0;
+    struct node *temp;
+
+    queue[rear++] = start;
+    visited[start] = 1;
+
+    while(front < rear)
+    {
+        int v = queue[front++];
+        printf("%d ", v);
+
+        temp = adj[v];
+        while(temp != NULL)
+        {
+            if(visited[temp->data] == 0)
+            {
+                queue[rear++] = temp->data;
+                visited[temp->data] = 1;
+            }
+            temp = temp->next;
+        }
+    }
+}
+
+int main()
+{
+    int e, i, u, v, start;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &e);
+
+    for(i = 0; i < n; i++)
+        adj[i] = NULL;
+
+    for(i = 0; i < e; i++)
+    {
+        printf("Enter edge (u v): ");
+        scanf("%d %d", &u, &v);
+
+        struct node *temp = createNode(v);
+        temp->next = adj[u];
+        adj[u] = temp;
+    }
+
+    printf("Enter starting vertex: ");
+    scanf("%d", &start);
+
+    printf("\nDFS Traversal: ");
+    for(i = 0; i < n; i++) visited[i] = 0;
+    DFS(start);
+
+    printf("\nBFS Traversal: ");
+    for(i = 0; i < n; i++) visited[i] = 0;
+    BFS(start);
+
+    return 0;
+}
+
+✅ SET A
+________________________________________
+⭐ A) Graph using Adjacency Matrix
+Sample Input
+Enter number of vertices: 4
+Enter number of edges: 5
+
+Enter edge (u v):
+0 1
+0 2
+1 2
+2 3
+3 0
+Sample Output
+Adjacency Matrix:
+
+0 1 1 0
+0 0 1 0
+0 0 0 1
+1 0 0 0
+Note: Matrix representation depends on the edges entered by the user.
+________________________________________
+⭐ B) Graph using Adjacency List + Degree
+Sample Input
+Enter number of vertices: 4
+Enter number of edges: 4
+
+Enter edge (u v):
+0 1
+0 2
+1 3
+2 3
+Sample Output
+Adjacency List:
+
+0 -> 2 1
+1 -> 3
+2 -> 3
+3 ->
+
+Vertex  Indegree  Outdegree  Total Degree
+0       0         2          2
+1       1         1          2
+2       1         1          2
+3       2         0          2
+👉 VERY IMPORTANT NOTE:
+Order of nodes in adjacency list may vary depending on insertion.
+________________________________________
+✅ SET B
+________________________________________
+⭐ A) BFS and DFS using Adjacency Matrix
+Sample Input
+Enter number of vertices: 5
+Enter number of edges: 6
+
+Enter edge (u v):
+0 1
+0 2
+1 3
+1 4
+2 4
+3 4
+
+Enter starting vertex: 0
+Sample Output
+DFS Traversal:
+0 1 3 4 2
+
+BFS Traversal:
+0 1 2 3 4
+
+Note :- Traversal order may vary based on graph structure.
+________________________________________
+⭐ B) BFS and DFS using Adjacency List
+Sample Input
+Enter number of vertices: 5
+Enter number of edges: 5
+
+Enter edge (u v):
+0 1
+0 2
+1 3
+2 4
+3 4
+
+Enter starting vertex: 0
+Sample Output
+DFS Traversal:
+0 2 4 1 3
+
+BFS Traversal:
+0 2 1 4 3
+
