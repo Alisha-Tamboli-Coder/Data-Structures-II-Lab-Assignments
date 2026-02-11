@@ -1,0 +1,471 @@
+Set A
+a) Write a C program which uses Binary search tree library and display the following 
+i. Node value at each level  
+ii. Count of node at each level 
+iii. Total levels in the tree.
+
+// Btree.h header file 
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a BST node
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a node into BST
+struct Node* insert(struct Node* root, int data) {
+    if (root == NULL)
+        return createNode(data);
+    if (data < root->data)
+        root->left = insert(root->left, data);
+    else if (data > root->data)
+        root->right = insert(root->right, data);
+    return root;
+}
+
+// Queue structure for level order traversal
+struct Queue {
+    struct Node* data[100];
+    int front, rear;
+};
+
+void initQueue(struct Queue* q) {
+    q->front = q->rear = 0;
+}
+
+void enqueue(struct Queue* q, struct Node* node) {
+    q->data[q->rear++] = node;
+}
+
+struct Node* dequeue(struct Queue* q) {
+    return q->data[q->front++];
+}
+
+int isEmpty(struct Queue* q) {
+    return q->front == q->rear;
+}
+
+// Level order traversal with node count and levels
+void levelOrder(struct Node* root) {
+    if (!root) return;
+
+    struct Queue q;
+    initQueue(&q);
+
+    enqueue(&q, root);
+    enqueue(&q, NULL); // Marker for end of level
+
+    int level = 1, count = 0;
+    printf("Level %d: ", level);
+
+    while (!isEmpty(&q)) {
+        struct Node* temp = dequeue(&q);
+
+        if (temp) {
+            printf("%d ", temp->data);
+            count++;
+
+            if (temp->left) enqueue(&q, temp->left);
+            if (temp->right) enqueue(&q, temp->right);
+        } else {
+            printf("\nNodes in this level: %d\n", count);
+            count = 0;
+
+            if (!isEmpty(&q)) {
+                enqueue(&q, NULL);
+                level++;
+                printf("Level %d: ", level);
+            }
+        }
+    }
+    printf("Total levels in the tree: %d\n", level);
+}
+
+
+// Main.c file
+#include <"Btree.h">
+
+int main() {
+    struct Node* root = NULL;
+    int n, val;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter node %d value: ", i + 1);
+        scanf("%d", &val);
+        root = insert(root, val);
+    }
+
+    levelOrder(root);
+
+    return 0;
+}
+
+Explanation:
+•	We use a queue to do level order traversal.
+•	NULL is used as a marker for end of each level.
+•	We count nodes in each level and print them.
+•	Total levels are also displayed.
+
+
+
+ b) Write a C program to find the minimum and maximum values in a Binary Search Tree
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+struct Node* insert(struct Node* root, int data) {
+    if (!root) 
+return createNode(data);
+    if (data < root->data) 
+root->left = insert(root->left, data);
+    else if (data > root->data) 
+root->right = insert(root->right, data);
+    return root;
+}
+// Find minimum value
+int findMin(struct Node* root) {
+    while (root->left) 
+root = root->left;
+    return root->data;
+}
+
+// Find maximum value
+int findMax(struct Node* root) {
+    while (root->right) 
+root = root->right;
+    return root->data;
+}
+
+int main() {
+    struct Node* root = NULL;
+    int n, val;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter node %d value: ", i + 1);
+        scanf("%d", &val);
+        root = insert(root, val);
+    }
+
+    printf("Minimum value in BST: %d\n", findMin(root));
+    printf("Maximum value in BST: %d\n", findMax(root));
+
+    return 0;
+}
+
+ Set B 
+
+a)	Write a program to sort n randomly generated elements using Heapsort method. 
+
+#include <stdio.h>
+
+void heapify(int A[], int n, int i)
+{
+    int largest = i;
+    int left = 2*i + 1;
+    int right = 2*i + 2;
+    int temp;
+
+    if(left < n && A[left] > A[largest])
+        largest = left;
+
+    if(right < n && A[right] > A[largest])
+        largest = right;
+
+    if(largest != i)
+    {
+        temp = A[i];
+        A[i] = A[largest];
+        A[largest] = temp;
+
+        heapify(A, n, largest);
+    }
+}
+
+void heapSort(int A[], int n)
+{
+    int i, temp;
+
+    // Build max heap
+    for(i = n/2 - 1; i >= 0; i--)
+        heapify(A, n, i);
+
+    // Heap sort
+    for(i = n - 1; i > 0; i--)
+    {
+        temp = A[0];
+        A[0] = A[i];
+        A[i] = temp;
+
+        heapify(A, i, 0);
+    }
+}
+
+int main()
+{
+    int A[20], n, i;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter elements:\n");
+    for(i = 0; i < n; i++)
+        scanf("%d", &A[i]);
+
+    heapSort(A, n);
+
+    printf("Sorted array:\n");
+    for(i = 0; i < n; i++)
+        printf("%d ", A[i]);
+
+    return 0;
+}
+
+
+b)	Write a C program to maintain a phonebook using Binary Search Tree by name where each node contain contact name and phone number. 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct Node {
+    char name[50];
+    char phone[15];
+    struct Node* left;
+    struct Node* right;
+};
+struct Node* createNode(char* name, char* phone) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    strcpy(newNode->name, name);
+    strcpy(newNode->phone, phone);
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+struct Node* insert(struct Node* root, char* name, char* phone) {
+    if (!root) return createNode(name, phone);
+    if (strcmp(name, root->name) < 0)
+        root->left = insert(root->left, name, phone);
+    else
+        root->right = insert(root->right, name, phone);
+    return root;
+}
+void inorder(struct Node* root) {
+    if (root) {
+        inorder(root->left);
+        printf("Name: %s, Phone: %s\n", root->name, root->phone);
+        inorder(root->right);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+    int n;
+    char name[50], phone[15];
+
+    printf("Enter number of contacts: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter name: ");
+        scanf("%s", name);
+        printf("Enter phone: ");
+        scanf("%s", phone);
+        root = insert(root, name, phone);
+    }
+
+    printf("\nPhonebook (sorted by name):\n");
+    inorder(root);
+
+    return 0;
+}
+
+
+c)	Write a C program to find the height of the tree and check whether given tree is balanced or not.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* insert(struct Node* root, int data) {
+    if (!root) return createNode(data);
+    if (data < root->data) root->left = insert(root->left, data);
+    else root->right = insert(root->right, data);
+    return root;
+}
+
+int height(struct Node* root) {
+    if (!root) 
+return 0;
+    int l = height(root->left);
+    int r = height(root->right);
+    return (l > r ? l : r) + 1;
+}
+
+int isBalanced(struct Node* root) {
+    if (!root) return 1;
+    int l = height(root->left);
+    int r = height(root->right);
+    if (abs(l - r) > 1) return 0;
+    return isBalanced(root->left) && isBalanced(root->right);
+}
+
+int main() {
+    struct Node* root = NULL;
+    int n, val;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter node %d value: ", i + 1);
+        scanf("%d", &val);
+        root = insert(root, val);
+    }
+
+    printf("Height of the tree: %d\n", height(root));
+    if (isBalanced(root))
+        printf("The tree is balanced.\n");
+    else
+        printf("The tree is not balanced.\n");
+
+    return 0;
+}
+
+________________________________________
+✅ Assignment 2 – Input / Output
+________________________________________
+🔹 Set A
+________________________________________
+✅ A) BST Level Order + Node Count + Total Levels
+✔ Sample Input
+Enter number of nodes: 7
+Enter node 1 value: 50
+Enter node 2 value: 30
+Enter node 3 value: 70
+Enter node 4 value: 20
+Enter node 5 value: 40
+Enter node 6 value: 60
+Enter node 7 value: 80
+✔ Expected Output
+Level 1: 50
+Nodes in this level: 1
+
+Level 2: 30 70
+Nodes in this level: 2
+
+Level 3: 20 40 60 80
+Nodes in this level: 4
+
+Total levels in the tree: 3
+
+________________________________________
+✅ B) Find Minimum and Maximum in BST
+✔ Sample Input
+Enter number of nodes: 5
+Enter node 1 value: 45
+Enter node 2 value: 20
+Enter node 3 value: 60
+Enter node 4 value: 10
+Enter node 5 value: 75
+✔ Expected Output
+Minimum value in BST: 10
+Maximum value in BST: 75
+
+
+________________________________________
+🔹 Set B
+________________________________________
+✅ A) Heap Sort
+✔ Sample Input
+Enter number of elements: 6
+Enter elements:
+25
+10
+40
+5
+60
+30
+✔ Expected Output
+Sorted array:
+5 10 25 30 40 60
+
+________________________________________
+✅ B) Phonebook using BST
+✔ Sample Input
+Enter number of contacts: 4
+Enter name: Rahul
+Enter phone: 9876543210
+Enter name: Amit
+Enter phone: 9123456780
+Enter name: Sneha
+Enter phone: 9988776655
+Enter name: Kiran
+Enter phone: 9090909090
+✔ Expected Output
+Phonebook (sorted by name):
+Name: Amit, Phone: 9123456780
+Name: Kiran, Phone: 9090909090
+Name: Rahul, Phone: 9876543210
+Name: Sneha, Phone: 9988776655
+
+________________________________________
+✅ C) Height of Tree + Balanced Check
+✔ Sample Input (Balanced Tree)
+Enter number of nodes: 7
+Enter node 1 value: 40
+Enter node 2 value: 20
+Enter node 3 value: 60
+Enter node 4 value: 10
+Enter node 5 value: 30
+Enter node 6 value: 50
+Enter node 7 value: 70
+✔ Expected Output
+Height of the tree: 3
+The tree is balanced.
+________________________________________
+✔ Sample Input (Unbalanced Tree )
+Enter number of nodes: 5
+Enter node 1 value: 10
+Enter node 2 value: 20
+Enter node 3 value: 30
+Enter node 4 value: 40
+Enter node 5 value: 50
+✔ Expected Output
+Height of the tree: 5
+The tree is not balanced.
+
