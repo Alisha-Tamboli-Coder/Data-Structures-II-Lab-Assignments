@@ -1,0 +1,414 @@
+// SET A
+
+a)	Implement a Binary search tree (BST) library (btree.h) with operations – create, search, insert, inorder, preorder and postorder. Write a menu driven program that performs the above operations.
+
+📁 File 1: btree.h
+#ifndef BTREE_H
+#define BTREE_H
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/* BST Node Structure */
+struct node
+{
+    int data;
+    struct node *left;
+    struct node *right;
+};
+
+/* Initialize BST */
+struct node* init()
+{
+    return NULL;
+}
+
+/* Create new node */
+struct node* createNode(int val)
+{
+    struct node *n = (struct node*)malloc(sizeof(struct node));
+    n->data = val;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
+}
+
+/* Insert into BST */
+struct node* insert(struct node *root, int val)
+{
+    if (root == NULL)
+        return createNode(val);
+
+    if (val < root->data)
+        root->left = insert(root->left, val);
+    else if (val > root->data)
+        root->right = insert(root->right, val);
+    else
+        printf("Duplicate value not allowed\n");
+
+    return root;
+}
+
+/* Search in BST */
+int search(struct node *root, int val)
+{
+    if (root == NULL)
+        return 0;
+
+    if (root->data == val)
+        return 1;
+
+    if (val < root->data)
+        return search(root->left, val);
+    else
+        return search(root->right, val);
+}
+
+/* Inorder Traversal */
+void inorder(struct node *root)
+{
+    if (root != NULL)
+    {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+/* Preorder Traversal */
+void preorder(struct node *root)
+{
+    if (root != NULL)
+    {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+/* Postorder Traversal */
+void postorder(struct node *root)
+{
+    if (root != NULL)
+    {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+#endif
+
+#include "btree.h"
+
+File 2: SetAQ1.c
+int main()
+{
+    struct node *root;
+    int ch, val;
+
+    root = init();   // Initialize BST
+
+    while (1)
+    {
+        printf("\n--- BST MENU ---\n");
+        printf("1. Insert\n");
+        printf("2. Search\n");
+        printf("3. Inorder Traversal\n");
+        printf("4. Preorder Traversal\n");
+        printf("5. Postorder Traversal\n");
+        printf("0. Exit\n");
+
+        printf("Enter choice: ");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+        case 1:
+            printf("Enter value: ");
+            scanf("%d", &val);
+            root = insert(root, val);
+            break;
+
+        case 2:
+            printf("Enter value to search: ");
+            scanf("%d", &val);
+            if (search(root, val))
+                printf("Value Found\n");
+            else
+                printf("Value Not Found\n");
+            break;
+
+        case 3:
+            printf("Inorder: ");
+            inorder(root);
+            printf("\n");
+            break;
+
+        case 4:
+            printf("Preorder: ");
+            preorder(root);
+            printf("\n");
+            break;
+
+        case 5:
+            printf("Postorder: ");
+            postorder(root);
+            printf("\n");
+            break;
+
+        case 0:
+            printf("Exiting...\n");
+            exit(0);
+
+        default:
+            printf("Invalid choice\n");
+        }
+    }
+
+    return 0;
+}
+
+
+b)	Write a program which uses binary search tree library and counts the total nodes and total leaf nodes in the tree. int count(T) – returns the total number of nodes from BST int countLeaf(T) – returns the total number of leaf nodes from BST
+
+📁 File 1: Btree2.h
+#ifndef BTREE2_H
+#define BTREE2_H
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/* BST Node */
+struct node {
+    int data;
+    struct node *left;
+    struct node *right;
+};
+
+/* Initialize BST */
+struct node* init() {
+    return NULL;
+}
+
+/* Create Node */
+struct node* createNode(int value) {
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+/* Insert Node */
+struct node* insert(struct node* root, int value) {
+    if (root == NULL)
+        return createNode(value);
+
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+    else
+        printf("Duplicate value not allowed\n");
+
+    return root;
+}
+
+/* Count Total Nodes */
+int count(struct node* T) {
+    if (T == NULL)
+        return 0;
+
+    return 1 + count(T->left) + count(T->right);
+}
+
+/* Count Leaf Nodes */
+int countLeaf(struct node* T) {
+    if (T == NULL)
+        return 0;
+
+    if (T->left == NULL && T->right == NULL)
+        return 1;
+
+    return countLeaf(T->left) + countLeaf(T->right);
+}
+
+#endif
+
+📁 File 2: SetAQ2.c 
+
+#include "Btree2.h"
+
+int main() {
+    struct node* root;
+    int ch, val;
+
+    root = init();
+
+    while (1) {
+        printf("\n--- BST COUNT MENU ---\n");
+        printf("1. Insert\n");
+        printf("2. Count Total Nodes\n");
+        printf("3. Count Leaf Nodes\n");
+        printf("0. Exit\n");
+
+        printf("Enter choice: ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+        case 1:
+            printf("Enter value: ");
+            scanf("%d", &val);
+            root = insert(root, val);
+            break;
+
+        case 2:
+            printf("Total nodes: %d\n", count(root));
+            break;
+
+        case 3:
+            printf("Leaf nodes: %d\n", countLeaf(root));
+            break;
+
+        case 0:
+            exit(0);
+
+        default:
+            printf("Invalid choice\n");
+        }
+    }
+
+    return 0;
+}
+
+
+// SET B
+
+a)	Write a C program which uses Binary search tree library and implements following function with recursion: int copy(T) – create another BST which is exact copy of BST which is passed as parameter. int compare(T1, T2) – compares two binary search trees and returns 1 if they are equal and 0 otherwise
+
+📁 File 1: Btree3.h
+#ifndef BTREE3_H
+#define BTREE3_H
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/* BST Node */
+struct node {
+    int data;
+    struct node *left;
+    struct node *right;
+};
+
+/* Global pointer for copied tree */
+struct node* newRoot = NULL;
+
+/* Initialize */
+struct node* init() {
+    return NULL;
+}
+
+/* Create node */
+struct node* createNode(int value) {
+    struct node* n = (struct node*)malloc(sizeof(struct node));
+    n->data = value;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
+}
+
+/* Insert */
+struct node* insert(struct node* root, int value) {
+    if (root == NULL)
+        return createNode(value);
+
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+    else
+        printf("Duplicate value not allowed\n");
+
+    return root;
+}
+
+/* copy(T) – lab book style (returns int) */
+int copy(struct node* T) {
+    if (T == NULL)
+        return 0;
+
+    newRoot = insert(newRoot, T->data);
+
+    copy(T->left);
+    copy(T->right);
+
+    return 1;
+}
+
+/* compare(T1, T2) – returns 1 if equal else 0 */
+int compare(struct node* T1, struct node* T2) {
+
+    if (T1 == NULL && T2 == NULL)
+        return 1;
+
+    if (T1 == NULL || T2 == NULL)
+        return 0;
+
+    if (T1->data != T2->data)
+        return 0;
+
+    if (compare(T1->left, T2->left) && compare(T1->right, T2->right))
+        return 1;
+    else
+        return 0;
+}
+
+/* Inorder */
+void inorder(struct node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+#endif
+
+📁 File 2: SetAQ3.c
+#include "Btree3.h"
+
+int main() {
+    struct node* root1;
+    struct node* root2;
+
+    root1 = init();
+    root2 = init();
+
+    /* Create BST */
+    root1 = insert(root1, 50);
+    insert(root1, 30);
+    insert(root1, 70);
+    insert(root1, 20);
+    insert(root1, 40);
+
+    /* Copy BST */
+    newRoot = NULL;   // reset before copying
+    copy(root1);
+    root2 = newRoot;
+
+    /* Display Trees */
+    printf("Original BST (Inorder): ");
+    inorder(root1);
+
+    printf("\nCopied BST (Inorder): ");
+    inorder(root2);
+
+    /* Compare */
+    if (compare(root1, root2))
+        printf("\nBSTs are equal  - 1  ");
+    else
+        printf("\nBSTs are not equal  - 0  ");
+
+    return 0;
+}
