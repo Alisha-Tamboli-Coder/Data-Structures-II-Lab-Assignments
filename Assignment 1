@@ -99,9 +99,10 @@ void postorder(struct node *root)
 
 #endif
 
-#include "btree.h"
 
-File 2: SetAQ1.c
+📁 File 2: SetAQ1.c
+
+#include "btree.h"
 int main()
 {
     struct node *root;
@@ -170,7 +171,7 @@ int main()
 }
 
 
-b)	Write a program which uses binary search tree library and counts the total nodes and total leaf nodes in the tree. int count(T) – returns the total number of nodes from BST int countLeaf(T) – returns the total number of leaf nodes from BST
+b)	Write a program which uses binary search tree library and counts the total nodes and total leaf nodes in the tree. int count(T) – returns the total number of nodes from BST int countLeaf(T) – returns the total number of leaf nodes from BST.
 
 📁 File 1: Btree2.h
 #ifndef BTREE2_H
@@ -239,7 +240,6 @@ int countLeaf(struct node* T) {
 📁 File 2: SetAQ2.c 
 
 #include "Btree2.h"
-
 int main() {
     struct node* root;
     int ch, val;
@@ -285,7 +285,7 @@ int main() {
 
 // SET B
 
-a)	Write a C program which uses Binary search tree library and implements following function with recursion: int copy(T) – create another BST which is exact copy of BST which is passed as parameter. int compare(T1, T2) – compares two binary search trees and returns 1 if they are equal and 0 otherwise
+a)	Write a C program which uses Binary search tree library and implements following function with recursion: int copy(T) – create another BST which is exact copy of BST which is passed as parameter. int compare(T1, T2) – compares two binary search trees and returns 1 if they are equal and 0 otherwise.
 
 📁 File 1: Btree3.h
 #ifndef BTREE3_H
@@ -376,8 +376,8 @@ void inorder(struct node* root) {
 #endif
 
 📁 File 2: SetAQ3.c
-#include "Btree3.h"
 
+#include "Btree3.h"
 int main() {
     struct node* root1;
     struct node* root2;
